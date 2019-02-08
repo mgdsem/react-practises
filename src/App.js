@@ -1,10 +1,12 @@
 import React from 'react';
 
 import Calculator from './components/Calculator';
+import Game from './components/Game';
 
 const App = () => (
     <div>
         <Calculator />
+        <Game />
     </div>
 );
 
