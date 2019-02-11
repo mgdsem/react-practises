@@ -12,25 +12,26 @@ class Game extends Component {
         this.onResetGame = this.onResetGame.bind(this);
 
         this.state = {
-            roundName: 'round:',
+            isGameRunning: true,
             round: 1,
-            numberToGuess: Math.floor((Math.random() * 100) + 1),
+            numberToGuess: this.generateNumber(),
             currentInputValue: '',
             gameStatusMessage: ''
         }
     };
 
+    generateNumber() {
+        return Math.floor((Math.random() * 100) + 1);
+    }
+
     onInputChange(e) {
         this.setState({ currentInputValue: e.target.value })
-        console.log(e.target.value);
     }
 
     onGo() {
         this.setState(prevState => ({
             round: prevState.round + 1
         }))
-        console.log(this.state.numberToGuess);
-        console.log(this.state.currentInputValue);
 
         this.setState({ currentInputValue: '' });
 
@@ -41,20 +42,22 @@ class Game extends Component {
         } else if (this.state.numberToGuess < Number(this.state.currentInputValue)) {
             this.setState({ gameStatusMessage: "try something lower" });
         } else {
-            this.setState({ gameStatusMessage: `You won in ${this.state.round} rounds!` })
-            this.setState({ round: '', roundName: '' })
+            this.setState({ gameStatusMessage: `You won in ${this.state.round} rounds!`, round: '', isGameRunning: false })
         };
     };
 
     onResetGame() {
-        this.setState({ currentInputValue: '' });
-        this.setState({ numberToGuess: Math.floor((Math.random() * 100) + 1) });
-        this.setState({ round: 1 });
-        this.setState({ roundName: 'round:' })
-        this.setState({ gameStatusMessage: '' });
+        this.setState({
+            currentInputValue: '',
+            numberToGuess: this.generateNumber(),
+            round: 1,
+            isGameRunning: true,
+            gameStatusMessage: ''
+        });
     }
 
     render() {
+        console.log(this.state.numberToGuess);
         return (
             <div className="game">
                 <label htmlFor="number">put a number between 0 and 100</label>
@@ -67,7 +70,9 @@ class Game extends Component {
                 />
                 <Button onClick={this.onGo}>Go!</Button>
                 <Button onClick={this.onResetGame}>Reset</Button>
-                <p>{this.state.roundName}{this.state.round}</p>
+                {this.state.isGameRunning && (
+                    <p>round: {this.state.round}</p>
+                )}
                 <p>{this.state.gameStatusMessage}</p>
             </div>
         )
